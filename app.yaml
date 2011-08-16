@@ -6,3 +6,16 @@ api_version: 1
 handlers:
 - url: .*
   script: main.py
+
+- url /admin
+  script: main.py
+  login: required
+
+- url: /css
+  static_dir: css
+
+- url: /js
+  static_dir: js
+
+- url: /img
+  static_dir: img
