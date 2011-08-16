@@ -4,7 +4,7 @@
 #import urllib2
 #import re
 #import sys
-#import os
+import os
 #import wsgiref.handlers
 import logging
 import datetime
@@ -12,8 +12,10 @@ import datetime
 #from utils.jsonproperty import JSONProperty
 
 from google.appengine.ext import webapp
-from google.appengine import users
-from google.appengine import db
+from google.appengine.ext import db
+
+from google.appengine.api import users
+
 from google.appengine.ext.webapp import util
 from google.appengine.ext.webapp import template
 
@@ -21,7 +23,7 @@ from google.appengine.ext.webapp import template
 class Album(db.Model):
 	thumb = db.StringProperty(multiline=False)
 	image = db.StringProperty(multiline=False)
-	description = db.TextProperty(multiline=True)
+	description = db.TextProperty()
 	title = db.StringProperty(multiline=False)
 	sub_title = db.StringProperty(multiline=False)
 	price = db.FloatProperty()
@@ -48,7 +50,7 @@ class Album(db.Model):
 
 class Albums(object):
 	def retreive( self, last_id_ref=0, max_return=25):
-		query = Album.all().filter("id_ref > ", id_ref).fetch(max_return)
+		query = Album.all().filter("id_ref > ", last_id_ref).fetch(max_return)
 
 		return query
 
@@ -65,7 +67,8 @@ class Albums(object):
 class MainHandler(webapp.RequestHandler):
 	def get(self):
 		last_id_ref = self.request.get("last_id_ref")
-		albums = Albums.retreive(last_id_ref=last_id_ref)
+		a = Albums()
+		albums = a.retreive(last_id_ref=last_id_ref)
 
 		template_values = {
 			'albums': albums
