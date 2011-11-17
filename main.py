@@ -79,7 +79,19 @@ class MainHandler(webapp.RequestHandler):
 
 class AdminHandler(webapp.RequestHandler):
 	def get(self):
-		self.response.out.write("Hello admin!")
+		user = users.get_current_user()
+		if user.nickname() == "test@example.com":
+			logout_url = users.create_logout_url("/")
+			a = Albums()
+			albums = a.retreive( last_id_ref=0, max_return=500)
+			
+			template_values = {
+				'albums': albums,
+				'logout_url': logout_url
+			}
+
+			path = os.path.join(os.path.dirname(__file__), 'templates/admin.html')
+			self.response.out.write(template.render(path, template_values))
 
 def main():
 	application = webapp.WSGIApplication([
