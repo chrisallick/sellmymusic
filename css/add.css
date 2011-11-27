@@ -2,9 +2,9 @@
 a { text-decoration: none; color: black; }
 .line:hover { text-decoration: underline; }
 
-input[type=text] { width: 300px; border: 1px solid black; margin-left: 10px; }
+input { margin-left: 10px; }
+input[type=text] { width: 300px; border: 1px solid black; }
 input[type=file] { border: none; }
-
 
 form { margin-bottom: 20px; }
 
