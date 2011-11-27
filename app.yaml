@@ -10,6 +10,10 @@ handlers:
 - url: /admin
   script: main.py
   login: required
+  
+- url: /add
+  script: main.py
+  login: required
 
 - url: /css
   static_dir: css

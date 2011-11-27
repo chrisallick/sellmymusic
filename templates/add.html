@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en-US" lang="en-US">
+	<head>
+		<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+		<title>Add New Record</title>
+
+		<link rel="stylesheet" type="text/css" href="/css/reset.css" />		
+		<link rel="stylesheet" type="text/css" href="/css/main.css" />
+		<link rel="stylesheet" type="text/css" href="/css/add.css" />
+
+		<script type="text/javascript" src="/js/jq.js"></script>
+		<script type="text/javascript" src="/js/add.js"></script>
+	</head>
+
+	<body>
+		<div id="wrapper">
+
+			<div id="add-album">
+				<h1>Add New Album</h1>
+				<form>
+					<div id="artwork">
+						<input type="file" />
+						<h2>Artist:</h2>
+						<input id="artist" type="text" />
+						<h2>Album:</h2>
+						<input id="album" type="text" />
+						<h2>Label:</h2>
+						<input id="label" type="text" />
+						<h2>Artist description:</h2>
+						<textarea class="artist-description"></textarea>
+						<h2>Availability:</h3>
+						<input id="availability" type="text" />
+						<h2>Album description:</h2>
+						<textarea class="album-description"></textarea>
+						<h2 class="side">Tracks:</h2>
+						<div id="sides">
+							<div>
+								<h3>Side: (<a id="add-side" href="#">add</a>)</h3>
+								<input class="side" type="text" />
+								<h3>Tracks: (<a class="add-track" href="#">add</a>)</h3>
+								<input class="track" type="text">
+							</div>
+						</div>
+					</div>
+					<input id="submit" type="submit" value="add album" />
+				</form>
+			</div>
+
+			<a class="line" href="/">home</a>
+			<a class="line" href="{{ logout_url }}">logout</a>
+		</div>
+	</body>
+</html>

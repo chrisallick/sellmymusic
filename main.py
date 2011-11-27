@@ -83,7 +83,7 @@ class AdminHandler(webapp.RequestHandler):
 		if user.nickname() == "test@example.com":
 			logout_url = users.create_logout_url("/")
 			a = Albums()
-			albums = a.retreive( last_id_ref=0, max_return=500)
+			albums = a.retreive( last_id_ref=0, max_return=500 )
 			
 			template_values = {
 				'albums': albums,
@@ -93,10 +93,16 @@ class AdminHandler(webapp.RequestHandler):
 			path = os.path.join(os.path.dirname(__file__), 'templates/admin.html')
 			self.response.out.write(template.render(path, template_values))
 
+class AddHandler(webapp.RequestHandler):
+	def get(self):
+		path = os.path.join(os.path.dirname(__file__), 'templates/add.html')
+		self.response.out.write(template.render(path, {}))
+
 def main():
 	application = webapp.WSGIApplication([
 		('/', MainHandler),
-		('/admin', AdminHandler)
+		('/admin', AdminHandler),
+		('/add', AddHandler)
 	], debug=True)
 
 	util.run_wsgi_app(application)

@@ -1,4 +1,5 @@
 img { display: block; }
+body { font: normal 13px Helvetica; color: black; }
 
 .clear:after { content: "."; display: block; height: 0; clear: both; visibility: hidden; }
 .clear {display: inline-block;}
