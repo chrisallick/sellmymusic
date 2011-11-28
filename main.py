@@ -89,25 +89,6 @@ class AdminHandler(webapp.RequestHandler):
 			path = os.path.join(os.path.dirname(__file__), 'templates/admin.html')
 			self.response.out.write(template.render(path, template_values))
 
-class UploadHandler(webapp.RequestHandler):
-	def post(self):
-		file_path = "/Users/chrisallick/Documents/PYTHON/AppEngine/sellmymusic/img/albums/"
-		logger.info( self.request )
-		# fileupload = self.request.POST.get("file", None)
-
-		# if fileupload:
-		# 	logger.info("got it")
-		# 	file_name = fileupload.filename
-
-		# 	try:
-		# 		f = open( file_path+file_name, 'w' )
-		# 		f.write( fileupload.file.read() )
-		# 	except IOError:
-		# 		print "IOError"
-		# 	else:
-		# 		f.close()
-		self.response.out.write("success")
-
 class AddHandler(webapp.RequestHandler):
 	def get(self):
 		user = users.get_current_user()
@@ -129,6 +110,7 @@ class AddHandler(webapp.RequestHandler):
 			if album:
 				album = json.loads(album)
 				a = Album(data=album)
+				#handle file data
 				a.put()
 				albums = Album.all()
 				albums = albums.fetch(10)

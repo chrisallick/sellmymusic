@@ -45,7 +45,7 @@ submitFiles = function() {
 		for( j = 0, len = fileInput.files['length']; j < len; j++ ) {
 			f = fileInput.files[j];
 			var xhr = new XMLHttpRequest();
-			xhr.onload = onloadHandler( event, f.name );
+			xhr.onload = onloadHandler( f.name );
 			xhr.open('POST', '/upload', true );
 			xhr.setRequestHeader("X-File-Name", f.name);	
 			xhr.setRequestHeader("Content-Type", "application/octet-stream");
@@ -54,8 +54,8 @@ submitFiles = function() {
 	}
 }
 
-onloadHandler = function( data ) {
-	
+onloadHandler = function( event, filename ) {
+	console.log( filename );
 }
 
 $(document).ready( function() {
