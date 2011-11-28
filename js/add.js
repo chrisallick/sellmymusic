@@ -37,6 +37,27 @@ submitAlbumData = function( data ) {
 	});
 }
 
+submitFiles = function() {
+	var fileInput = document.getElementById('files');
+	if( fileInput.files['length'] == 0 ) {
+		alert("no files");
+	} else {
+		for( j = 0, len = fileInput.files['length']; j < len; j++ ) {
+			f = fileInput.files[j];
+			var xhr = new XMLHttpRequest();
+			xhr.onload = onloadHandler( event, f.name );
+			xhr.open('POST', '/upload', true );
+			xhr.setRequestHeader("X-File-Name", f.name);	
+			xhr.setRequestHeader("Content-Type", "application/octet-stream");
+			xhr.send( f );
+		}
+	}
+}
+
+onloadHandler = function( data ) {
+	
+}
+
 $(document).ready( function() {
 	
 	$(".add-track").each( function(index,value) {
@@ -63,6 +84,12 @@ $(document).ready( function() {
 		});
 	});
 	
+	$("#submit").click( function( event ) {
+		event.preventDefault();
+		//$("form").submit();
+		submitFiles();
+	});
+
 	$('form').submit(function(event) {
 		event.preventDefault();
 		submitAlbumData( $(this).serializeArray() );
