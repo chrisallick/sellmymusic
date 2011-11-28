@@ -19,3 +19,5 @@ h3 { font: bold 13px Helvetica; }
 #sides input { width: 286px; margin-bottom: 5px; }
 
 #add-side, .add-track { font-weight: normal; }
+
+#loading-gif { display: none; }

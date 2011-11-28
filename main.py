@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-#import json
+import json
 #import urllib2
 #import re
 #import sys
@@ -9,7 +9,7 @@ import os
 import logging
 import datetime
 
-#from utils.jsonproperty import JSONProperty
+from utils.jsonproperty import JSONProperty
 
 from google.appengine.ext import webapp
 from google.appengine.ext import db
@@ -21,15 +21,16 @@ from google.appengine.ext.webapp import template
 
 
 class Album(db.Model):
-	thumb = db.StringProperty(multiline=False)
-	image = db.StringProperty(multiline=False)
-	description = db.TextProperty()
-	title = db.StringProperty(multiline=False)
-	sub_title = db.StringProperty(multiline=False)
-	price = db.FloatProperty()
-	tracks = db.StringListProperty()
-	id_ref = db.StringProperty(multiline=False)
-	created = db.DateProperty(auto_now_add=True)
+	#thumb = db.StringProperty(multiline=False)
+	#image = db.StringProperty(multiline=False)
+	#description = db.TextProperty()
+	#title = db.StringProperty(multiline=False)
+	#sub_title = db.StringProperty(multiline=False)
+	#price = db.FloatProperty()
+	#tracks = db.StringListProperty()
+	data = JSONProperty()
+	#id_ref = db.StringProperty(multiline=False)
+	#created = db.DateProperty(auto_now_add=True)
 
 	def save(self):
 		try:
@@ -80,7 +81,7 @@ class MainHandler(webapp.RequestHandler):
 class AdminHandler(webapp.RequestHandler):
 	def get(self):
 		user = users.get_current_user()
-		if user.nickname() == "test@example.com":
+		if users.is_current_user_admin():
 			logout_url = users.create_logout_url("/")
 			a = Albums()
 			albums = a.retreive( last_id_ref=0, max_return=500 )
@@ -95,8 +96,34 @@ class AdminHandler(webapp.RequestHandler):
 
 class AddHandler(webapp.RequestHandler):
 	def get(self):
-		path = os.path.join(os.path.dirname(__file__), 'templates/add.html')
-		self.response.out.write(template.render(path, {}))
+		user = users.get_current_user()
+		if user.nickname() == "test@example.com":
+		#if users.is_current_user_admin():
+			logout_url = users.create_logout_url("/")
+
+			template_values = {
+				'logout_url': logout_url
+			}			
+
+			path = os.path.join(os.path.dirname(__file__), 'templates/add.html')
+			self.response.out.write(template.render(path, template_values))
+
+	def post(self):
+		if users.is_current_user_admin():
+			album = self.request.get('album', None)
+			if album:
+				album = json.loads(album)
+				a = Album(data=album)
+				a.put()
+				albums = Album.all()
+				albums = albums.fetch(10)
+				for a in albums:
+					logging.info( a.data )
+				self.response.out.write( json.dumps({'msg': 'success'}) );
+			else:
+				self.response.out.write( json.dumps({'msg': 'error'}) );
+		else:
+			self.response.out.write( json.dumps({'msg': 'error'}) );
 
 def main():
 	application = webapp.WSGIApplication([

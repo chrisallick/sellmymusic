@@ -17,37 +17,37 @@
 
 			<div id="add-album">
 				<h1>Add New Album</h1>
-				<form>
-					<div id="artwork">
-						<input type="file" />
-						<h2>Artist:</h2>
-						<input id="artist" type="text" />
-						<h2>Album:</h2>
-						<input id="album" type="text" />
-						<h2>Label:</h2>
-						<input id="label" type="text" />
-						<h2>Artist description:</h2>
-						<textarea class="artist-description"></textarea>
-						<h2>Availability:</h3>
-						<input id="availability" type="text" />
-						<h2>Album description:</h2>
-						<textarea class="album-description"></textarea>
-						<h2 class="side">Tracks:</h2>
-						<div id="sides">
-							<div>
-								<h3>Side: (<a id="add-side" href="#">add</a>)</h3>
-								<input class="side" type="text" />
-								<h3>Tracks: (<a class="add-track" href="#">add</a>)</h3>
-								<input class="track" type="text">
-							</div>
+				<form id="album-data" >
+					<input type="file" />
+					<h2>Artist:</h2>
+					<input name="artist" type="text" />
+					<h2>Album:</h2>
+					<input name="album" type="text" />
+					<h2>Label:</h2>
+					<input name="label" type="text" />
+					<h2>Artist description:</h2>
+					<textarea name="artist-description"></textarea>
+					<h2>Availability:</h3>
+					<input name="availability" type="text" />
+					<h2>Album description:</h2>
+					<textarea name="album-description"></textarea>
+					<h2>Tracks:</h2>
+					<div id="sides">
+						<div>
+							<h3>Side: (<a id="add-side" href="#">add</a>)</h3>
+							<input class="side" type="text" />
+							<h3>Tracks: (<a class="add-track" href="#">add</a>)</h3>
+							<input class="track" type="text" />
 						</div>
 					</div>
 					<input id="submit" type="submit" value="add album" />
 				</form>
 			</div>
-
-			<a class="line" href="/">home</a>
-			<a class="line" href="{{ logout_url }}">logout</a>
+			<img id="loading-gif" src="img/loading.gif" />
+			<div id="footer">
+				<a class="line" href="/">home</a>
+				<a class="line" href="{{ logout_url }}">logout</a>
+			</div>
 		</div>
 	</body>
 </html>

@@ -9,11 +9,11 @@ handlers:
 
 - url: /admin
   script: main.py
-  login: required
-  
+  login: admin
+
 - url: /add
   script: main.py
-  login: required
+  login: admin
 
 - url: /css
   static_dir: css
