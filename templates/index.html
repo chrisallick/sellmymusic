@@ -14,12 +14,44 @@
 	<body>
 		<div id="wrapper">
 
-			<div id="main">
-				{% for album in albums %}
-					{{ album }}
-				{% endfor %}
+			<div id="header">
+				<a class="line" href="/">home</a> / 
+				{% if current_user %}
+					<a class="line" href="/auth/logout">logout</a> /
+					<a href="/add">add</a>
+				{% else %}
+					<a class="line" href="/auth/login">login</a>
+				{% end %}
 			</div>
 
+			<div id="main">
+				<h2>Artwork:</h2>
+				<h2>Artist:</h2>
+				<p>chrisallick</p>
+				<h2>Album:</h2>
+				<p>album name</p>
+				<h2>Label:</h2>
+				<p>label nane</p>
+				<h2>Artist description:</h2>
+				<p>description</p>
+				<h2>Availability:</h3>
+				<p>sold out</p>
+				<h2>Album description:</h2>
+				<p>album description</p>
+				<h2>Price:</h2>
+				<p>$20</p>
+				<h2>Tracks:</h2>
+				<div id="sides">
+					<div>
+						<h3>Side:</h3>
+						<p>A</p>
+						<h3>Tracks:</h3>
+						<ul>
+							<li>track one side A</li>
+						</ul>
+					</div>
+				</div>
+			</div>
 		</div>
 	</body>
 </html>

@@ -1,10 +1,12 @@
 img { display: block; }
 body { font: normal 13px Helvetica; color: black; }
+a { text-decoration: none; color: black; }
 
 .left { float: left; }
 .right { float: right; }
 
 #header { width: 700px; margin: auto; padding-top: 5px; text-align: right; }
+#header a:hover { text-decoration: underline; }
 
 .clear:after { content: "."; display: block; height: 0; clear: both; visibility: hidden; }
 .clear {display: inline-block;}

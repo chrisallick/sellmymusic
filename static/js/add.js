@@ -86,8 +86,8 @@ $(document).ready( function() {
 	
 	$("#submit").click( function( event ) {
 		event.preventDefault();
-		//$("form").submit();
-		submitFiles();
+		$("form").submit();
+		//submitFiles();
 	});
 
 	$('form').submit(function(event) {

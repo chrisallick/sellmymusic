@@ -1,8 +1,5 @@
 #add-album { margin: auto; width: 700px; padding-top: 10px; }
 
-a { text-decoration: none; color: black; }
-.line:hover { text-decoration: underline; }
-
 input { margin-left: 10px; margin-bottom: 10px; }
 input[type=text] { width: 300px; border: 1px solid black; }
 input[type=file] { border: none;  display: block; }
