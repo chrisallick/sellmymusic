@@ -1,95 +1,85 @@
 #!/usr/bin/env python
 
 import json
-#import urllib2
-#import re
-#import sys
-import os
-#import wsgiref.handlers
+import os.path
 import logging
-import datetime
 
-from utils.jsonproperty import JSONProperty
+import tornado.auth
+import tornado.escape
+import tornado.httpserver
+import tornado.websocket
+import tornado.ioloop
+import tornado.options
+import tornado.web
 
-from google.appengine.ext import webapp
-from google.appengine.ext import db
+from tornado.options import define, options
 
-from google.appengine.api import users
+define("port", default=8888, help="run on the given port", type=int)
 
-from google.appengine.ext.webapp import util
-from google.appengine.ext.webapp import template
-
-
-class Album(db.Model):
-	#thumb = db.StringProperty(multiline=False)
-	image = db.StringProperty(multiline=False)
-	data = JSONProperty()
-	#id_ref = db.StringProperty(multiline=False)
-	#created = db.DateProperty(auto_now_add=True)
-
-	def save(self):
-		try:
-			obj_id = self.key().id()
-			resave = False
-		except db.NotSavedError:
-			resave = True
-
-		self.put()
-		if resave:
-			self.id_ref = self.key().id()
-			self.put()
-
-	def get(cls, id_ref):
-		q = db.Query(Album)
-		q.filter('id_ref = ', id_ref)
-		return q.get()
-
-class Albums(object):
-	def retreive( self, last_id_ref=0, max_return=25):
-		query = Album.all().filter("id_ref > ", last_id_ref).fetch(max_return)
-
-		return query
-
-	def remove( self, id_ref=None ):
-		if id_ref:
-			album = Album.get(id_ref)
-			if album:
-				db.delete(album)
-				return True
-			else:
-				return False
+##########   /*     */   ##########
 
 
-class MainHandler(webapp.RequestHandler):
+class Application(tornado.web.Application):
+    def __init__(self):
+        handlers = [
+            (r"/", MainHandler),
+            (r"/add", AddHandler),
+            (r"/admin", AdminHandler),
+            (r"/auth/login", AuthHandler),
+            (r"/auth/logout", LogoutHandler)
+        ]
+        settings = dict(
+            template_path=os.path.join(os.path.dirname(__file__), "templates"),
+            static_path=os.path.join(os.path.dirname(__file__), "static"),
+            cookie_secret="11oETzKXQAGaYdkL5gEmGeJJFuYh7EQnp2XdTP1o/Vo=",
+            login_url="/auth/login"
+        )
+        tornado.web.Application.__init__(self, handlers, **settings)
+
+
+class BaseHandler(tornado.web.RequestHandler):
+    def get_current_user(self):
+        user_json = self.get_secure_cookie("user")
+        if not user_json:
+            return None
+        else:
+            return tornado.escape.json_decode(user_json)
+
+##########   /*     */   ##########
+
+
+class AuthHandler(BaseHandler, tornado.auth.GoogleMixin):
+    @tornado.web.asynchronous
+    def get(self):
+        if self.get_argument("openid.mode", None):
+            self.get_authenticated_user(self.async_callback(self._on_auth))
+            return
+        self.authenticate_redirect()
+
+    def _on_auth(self, user):
+        if not user:
+            raise tornado.web.HTTPError(500, "Google auth failed")
+        self.set_secure_cookie("user", tornado.escape.json_encode(user))
+        self.redirect(self.get_argument("next", "/"))
+
+class LogoutHandler(BaseHandler):
+    def get(self):
+        self.clear_cookie("user")
+        self.redirect(self.get_argument("next", "/"))
+
+
+##########   /*     */   ##########
+
+
+class MainHandler(tornado.web.RequestHandler):
 	def get(self):
-		last_id_ref = self.request.get("last_id_ref")
-		a = Albums()
-		albums = a.retreive(last_id_ref=last_id_ref)
+		self.render("index.html")
 
-		template_values = {
-			'albums': albums
-		}
-
-		path = os.path.join(os.path.dirname(__file__), 'templates/index.html')
-		self.response.out.write(template.render(path, template_values))
-
-class AdminHandler(webapp.RequestHandler):
+class AdminHandler(tornado.web.RequestHandler):
 	def get(self):
-		user = users.get_current_user()
-		if users.is_current_user_admin():
-			logout_url = users.create_logout_url("/")
-			a = Albums()
-			albums = a.retreive( last_id_ref=0, max_return=500 )
-			
-			template_values = {
-				'albums': albums,
-				'logout_url': logout_url
-			}
+		self.render("admin.html")
 
-			path = os.path.join(os.path.dirname(__file__), 'templates/admin.html')
-			self.response.out.write(template.render(path, template_values))
-
-class AddHandler(webapp.RequestHandler):
+class AddHandler(tornado.web.RequestHandler):
 	def get(self):
 		user = users.get_current_user()
 		#if user.nickname() == "test@example.com":
@@ -109,32 +99,19 @@ class AddHandler(webapp.RequestHandler):
 			album = self.request.get('album', None)
 			if album:
 				album = json.loads(album)
-				a = Album(data=album)
-				#handle file data
+				sleeve = self.request.get("sleeve")
+				thumb = self.request.get("thumb")
+				extra = self.request.get("extra")
+				a = Album(data=album, sleeve=db.Blob(sleeve), thumb=db.Blob(thumb), extra=db.Blob(extra))
 				a.put()
-				albums = Album.all()
-				albums = albums.fetch(10)
-				for a in albums:
-					logging.info( a.data )
-				self.response.out.write( json.dumps({'msg': 'success'}) );
-			else:
-				self.response.out.write( json.dumps({'msg': 'error'}) );
-		else:
-			self.response.out.write( json.dumps({'msg': 'error'}) );
+				#self.response.out.write( json.dumps({'msg': 'success'}) );
+				self.redirect('/')
 
 def main():
-	application = webapp.WSGIApplication([
-		('/', MainHandler),
-		('/admin', AdminHandler),
-		('/add', AddHandler),
-		('/upload', UploadHandler)
-	], debug=True)
+    tornado.options.parse_command_line()
+    http_server = tornado.httpserver.HTTPServer(Application())
+    http_server.listen(options.port)
+    tornado.ioloop.IOLoop.instance().start()
 
-	util.run_wsgi_app(application)
-
-
-if __name__ == '__main__':
-	logger = logging.getLogger("main_logger")
-	logger.setLevel(logging.DEBUG)
-
-	main()
+if __name__ == "__main__":
+    main()
