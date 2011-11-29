@@ -25,6 +25,7 @@ class Application(tornado.web.Application):
         handlers = [
             (r"/", MainHandler),
             (r"/add", AddHandler),
+            (r"/upload", UploadHandler),
             (r"/admin", AdminHandler),
             (r"/album/(\d+)?/?", AlbumHandler),
             (r"/auth/login", AuthHandler),
@@ -94,14 +95,13 @@ class AddHandler(BaseHandler):
     def get(self):
         if self.current_user['email'] == "chrisallick@gmail.com":
             self.render("add.html")
-        else:
-            print "nope"
 
     @tornado.web.authenticated
     def post(self):
-        if self.current_user['email'] != "chrisallick@gmail.com":
+        if self.current_user['email'] == "chrisallick@gmail.com":
             album = self.get_argument('album', None)
             if album:
+                print album
                 a = json.loads( album )
                 artist = a['artist']
                 try:
@@ -115,7 +115,21 @@ class AddHandler(BaseHandler):
 
                 self.write( json.dumps({'msg': 'success'}) );
         else:
+            print self.current_user['email']
             self.write( json.dumps({'msg': 'error'}) );
+
+class UploadHandler(BaseHandler):
+    def post(self):
+        if "X-File-Name" in self.request.headers:
+            file_name   = self.request.headers['X-File-Name']
+            print "receiving: " + file_name
+            try:
+                f = open( './static/img/albums/'+file_name, 'w' )
+                f.write( self.request.body )
+            except IOError:
+                print "IOError"
+            else:
+                f.close()
 
 
 ##########   /*     */   ##########

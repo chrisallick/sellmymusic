@@ -1,4 +1,27 @@
-submitAlbumData = function( data ) {
+postAlbumData = function( album ) {
+	$.ajax({
+		url: "/add",
+		type: 'POST',
+		data: { 'album': JSON.stringify(album) },
+		dataType: 'json',
+		beforeSend: function() {
+			$("#add-album").slideUp('fast');
+			$("#loading-gif").css("display", "inline");
+		},
+		success: function(data) {
+			$("#loading-gif").css("display", "none");
+			console.log( data.msg );
+			submitFiles( album['artist'] );
+		},
+		error: function(data){
+			$("#loading-gif").css("display", "none");
+		}
+	});
+}
+
+crunchAlbumData = function( data ) {
+	error = false;
+
 	var album = {};
 	$.each(data, function() {
 		//console.log(this.name + ", " + this.value);
@@ -17,27 +40,27 @@ submitAlbumData = function( data ) {
 		});
 		album['tracks'].push( side );
 	});
-	//console.log( album );
-	$.ajax({
-		url: "/add",
-		type: 'POST',
-		data: { 'album': JSON.stringify(album) },
-		dataType: 'json',
-		beforeSend: function() {
-			$("#add-album").slideUp('fast');
-			$("#loading-gif").css("display", "inline");
-		},
-		success: function(data) {
-			$("#loading-gif").css("display", "none");
-			console.log( data.msg );
-		},
-		error: function(data){
-			$("#loading-gif").css("display", "none");
+
+	var fileInput = document.getElementById('files');
+	if( fileInput.files['length'] < 1 || fileInput.files['length'] > 5 ) {
+		alert("You must have between 1 and 5 files.");
+		error = true;
+	} else {
+		var files = Array();
+		for( j = 0, len = fileInput.files['length']; j < len; j++ ) {
+			f = fileInput.files[j];
+			files.push(album['artist']+'.'+f.name);
 		}
-	});
+		album['artwork'] = files;
+	}
+	//console.log( album );
+
+	if( !error ) {
+		postAlbumData( album );
+	}
 }
 
-submitFiles = function() {
+submitFiles = function( artist ) {
 	var fileInput = document.getElementById('files');
 	if( fileInput.files['length'] == 0 ) {
 		alert("no files");
@@ -47,7 +70,7 @@ submitFiles = function() {
 			var xhr = new XMLHttpRequest();
 			xhr.onload = onloadHandler( f.name );
 			xhr.open('POST', '/upload', true );
-			xhr.setRequestHeader("X-File-Name", f.name);	
+			xhr.setRequestHeader("X-File-Name", artist+'.'+f.name);	
 			xhr.setRequestHeader("Content-Type", "application/octet-stream");
 			xhr.send( f );
 		}
@@ -92,6 +115,6 @@ $(document).ready( function() {
 
 	$('form').submit(function(event) {
 		event.preventDefault();
-		submitAlbumData( $(this).serializeArray() );
+		crunchAlbumData( $(this).serializeArray() );
 	});
 })
