@@ -29,7 +29,7 @@ class Application(tornado.web.Application):
             (r"/add", AddHandler),
             (r"/upload", UploadHandler),
             (r"/admin", AdminHandler),
-            (r"/album/(\d+)?/?", AlbumHandler),
+            (r"/edit/(\d+)?/?", EditHandler),
             (r"/auth/login", AuthHandler),
             (r"/auth/logout", LogoutHandler)
         ]
@@ -86,15 +86,30 @@ class MainHandler(BaseHandler):
 
         self.render("index.html", albums=albums )
 
+
+##########   /*     */   ##########
+
+
 class AdminHandler(BaseHandler):
     @tornado.web.authenticated
     def get(self):
         self.render("admin.html")
 
-class AlbumHandler(BaseHandler):
-    def get(self, post_id):
-        if post_id:
-            print post_id
+
+##########   /*     */   ##########
+
+
+class EditHandler(BaseHandler):
+    @tornado.web.authenticated
+    def get(self, catnum):
+        if catnum:
+            c = pymongo.Connection('localhost')
+            db = c.albums
+            album = db.albums.find_one({'catnum':catnum})
+            if album:
+                self.render("edit.html", album=album )
+            else:
+                self.redirect("/")
         else:
             self.redirect("/")
 
@@ -108,17 +123,33 @@ class AddHandler(BaseHandler):
     def post(self):
         if self.current_user['email'] == "chrisallick@gmail.com":
             album = self.get_argument('album', None)
+            catnum = self.get_argument('remove', None)
             if album:
+                temp = json.loads(album)
                 c = pymongo.Connection('localhost')
                 db = c.albums
                 albums = db.albums
-                albums.insert( json.loads(album) )
-
+                old = albums.find_one({'catnum':str(temp['catnum'])})
+                if old:
+                    old.update(json.loads(album))
+                    albums.save(old)
+                else:
+                    albums.insert( json.loads(album) )
                 self.write( json.dumps({'msg': 'success'}) )
+            elif catnum:
+                c = pymongo.Connection('localhost')
+                db = c.albums
+                db.albums.remove({'catnum': catnum})
+                self.redirect("/")
         else:
             self.write( json.dumps({'msg': 'error'}) )
 
+
+##########   /*     */   ##########
+
+
 class UploadHandler(BaseHandler):
+    @tornado.web.authenticated
     def post(self):
         if "X-File-Name" in self.request.headers:
             file_name   = self.request.headers['X-File-Name']

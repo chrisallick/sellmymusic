@@ -2,14 +2,14 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en-US" lang="en-US">
 	<head>
 		<meta http-equiv="content-type" content="text/html; charset=utf-8" />
-		<title>Add New Record</title>
+		<title>Edit Record</title>
 
-		<link rel="stylesheet" type="text/css" href="static/css/reset.css" />		
-		<link rel="stylesheet" type="text/css" href="static/css/main.css" />
-		<link rel="stylesheet" type="text/css" href="static/css/add.css" />
+		<link rel="stylesheet" type="text/css" href="/static/css/reset.css" />		
+		<link rel="stylesheet" type="text/css" href="/static/css/main.css" />
+		<link rel="stylesheet" type="text/css" href="/static/css/add.css" />
 
-		<script type="text/javascript" src="static/js/jq.js"></script>
-		<script type="text/javascript" src="static/js/add.js"></script>
+		<script type="text/javascript" src="/static/js/jq.js"></script>
+		<script type="text/javascript" src="/static/js/add.js"></script>
 	</head>
 
 	<body>
@@ -23,29 +23,29 @@
 				{% end %}
 			</div>
 			<div id="add-album" class="clear">
-				<h1>Add New Album</h1>
+				<h1>Edit Album (<a id="delete" href="#">delete</a>)</h1>
 				<form id="album-data" class="clear">
 					<div class="left">
 						<h2>Artwork:</h2>
 						<input id="files" type="file" multiple />
 						<h2>Artist:</h2>
-						<input name="artist" type="text" />
+						<input name="artist" type="text" value="{{ album['artist'] }}" />
 						<h2>Catalog Number</h2>
-						<input name="catnum" type="text" />
+						<input id="catnum" name="catnum" type="text" value="{{ album['catnum'] }}" />
 						<h2>Album:</h2>
-						<input name="album" type="text" />
+						<input name="album" type="text" value="{{ album['album'] }}" />
 						<h2>Label:</h2>
-						<input name="label" type="text" />
+						<input name="label" type="text" value="{{ album['label'] }}" />
 						<h2>Artist description:</h2>
-						<textarea name="artist-description"></textarea>
+						<textarea name="artist-description">{{ album['artist-description'] }}</textarea>
 					</div>
 					<div class="right">
 						<h2>Availability:</h3>
-						<input name="availability" type="text" />
+						<input name="availability" type="text" value="{{ album['availability'] }}" />
 						<h2>Album description:</h2>
-						<textarea name="album-description"></textarea>
+						<textarea name="album-description">{{ album['album-description'] }}</textarea>
 						<h2>Price:</h2>
-						<input name="price" type="text" />
+						<input name="price" type="text" value="{{ album['price'] }}" />
 						<h2>Tracks:</h2>
 						<div id="sides">
 							<div>
@@ -55,11 +55,11 @@
 								<input class="track" type="text" />
 							</div>
 						</div>
-						<input id="submit" type="submit" value="add album" />
+						<input id="submit" type="submit" value="update album" />
 					</div>
 				</form>
 			</div>
-			<img id="loading-gif" src="static/img/loading.gif" />
+			<img id="loading-gif" src="/static/img/loading.gif" />
 		
 		</div>
 	</body>

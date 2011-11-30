@@ -11,7 +11,27 @@ postAlbumData = function( album ) {
 		success: function(data) {
 			$("#loading-gif").css("display", "none");
 			console.log( data.msg );
-			submitFiles( album['artist'] );
+			submitFiles( album['catnum'] );
+		},
+		error: function(data){
+			$("#loading-gif").css("display", "none");
+		}
+	});
+}
+
+deleteAlbum = function( catnum ) {
+	$.ajax({
+		url: "/add",
+		type: 'POST',
+		data: { 'remove': catnum },
+		dataType: 'json',
+		beforeSend: function() {
+			$("#add-album").slideUp('fast');
+			$("#loading-gif").css("display", "inline");
+		},
+		success: function(data) {
+			$("#loading-gif").css("display", "none");
+			console.log( data.msg );
 		},
 		error: function(data){
 			$("#loading-gif").css("display", "none");
@@ -24,7 +44,6 @@ crunchAlbumData = function( data ) {
 
 	var album = {};
 	$.each(data, function() {
-		//console.log(this.name + ", " + this.value);
 		album[this.name] = this.value;
 	});
 
@@ -60,7 +79,7 @@ crunchAlbumData = function( data ) {
 	}
 }
 
-submitFiles = function( artist ) {
+submitFiles = function( catnum ) {
 	var fileInput = document.getElementById('files');
 	if( fileInput.files['length'] == 0 ) {
 		alert("no files");
@@ -70,7 +89,7 @@ submitFiles = function( artist ) {
 			var xhr = new XMLHttpRequest();
 			xhr.onload = onloadHandler( f.name );
 			xhr.open('POST', '/upload', true );
-			xhr.setRequestHeader("X-File-Name", artist+'.'+f.name);	
+			xhr.setRequestHeader("X-File-Name", catnum+'.'+f.name);	
 			xhr.setRequestHeader("Content-Type", "application/octet-stream");
 			xhr.send( f );
 		}
@@ -110,11 +129,15 @@ $(document).ready( function() {
 	$("#submit").click( function( event ) {
 		event.preventDefault();
 		$("form").submit();
-		//submitFiles();
 	});
 
 	$('form').submit(function(event) {
 		event.preventDefault();
 		crunchAlbumData( $(this).serializeArray() );
 	});
+
+	$("#delete").click(function(event){
+		event.preventDefault();
+		deleteAlbum( $("#catnum").val() );
+	})
 })
