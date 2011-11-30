@@ -25,32 +25,33 @@
 			</div>
 
 			<div id="main">
-				<h2>Artwork:</h2>
-				<h2>Artist:</h2>
-				<p>chrisallick</p>
-				<h2>Album:</h2>
-				<p>album name</p>
-				<h2>Label:</h2>
-				<p>label nane</p>
-				<h2>Artist description:</h2>
-				<p>description</p>
-				<h2>Availability:</h3>
-				<p>sold out</p>
-				<h2>Album description:</h2>
-				<p>album description</p>
-				<h2>Price:</h2>
-				<p>$20</p>
-				<h2>Tracks:</h2>
-				<div id="sides">
-					<div>
-						<h3>Side:</h3>
-						<p>A</p>
-						<h3>Tracks:</h3>
-						<ul>
-							<li>track one side A</li>
-						</ul>
+				{% for album in albums %}
+					<h2>Artwork:</h2>
+					{% for src in album['artwork'] %}
+						<img src="static/img/albums/{{ src }}" width="100" />
+					{% end %}
+					<h2>Artist: {{ album['artist'] }}</h2>
+					<h2>Album: {{ album['album'] }}</h2>
+					<h2>Label: {{ album['label'] }}</h2>
+					<h2>Artist description: {{ album['artist-description'] }}</h2>
+					<h2>Availability: {{ album['availability'] }}</h3>
+					<h2>Album description: {{ album['album-description'] }}</h2>
+					<h2>Price: {{ album['price'] }}</h2>
+					<h2>Tracks:</h2>
+					<div id="sides">
+						{% for side in album['tracks'] %}
+						<div>
+							<h3>Side: {{ side['name'] }}</h3>
+							<h3>Tracks:</h3>
+							<ul>
+								{% for track in side['tracks'] %}
+								<li>{{ track }}</li>
+								{% end %}
+							</ul>
+						</div>
+						{% end %}
 					</div>
-				</div>
+				{% end %}
 			</div>
 		</div>
 	</body>

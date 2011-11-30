@@ -4,6 +4,8 @@ import json
 import os
 import logging
 
+import pymongo
+
 import tornado.auth
 import tornado.escape
 import tornado.httpserver
@@ -76,7 +78,13 @@ class LogoutHandler(BaseHandler):
 
 class MainHandler(BaseHandler):
     def get(self):
-        self.render("index.html")
+        c = pymongo.Connection('localhost')
+        db = c.albums
+        albums = list()
+        for a in db.albums.find().limit(10):
+            albums.append( a )
+
+        self.render("index.html", albums=albums )
 
 class AdminHandler(BaseHandler):
     @tornado.web.authenticated
@@ -101,22 +109,14 @@ class AddHandler(BaseHandler):
         if self.current_user['email'] == "chrisallick@gmail.com":
             album = self.get_argument('album', None)
             if album:
-                print album
-                a = json.loads( album )
-                artist = a['artist']
-                try:
-                    f = open('/Users/chrisallick/Documents/GIT/sellmymusic/static/albums/'+artist+'.json', 'w')
-                    f.write( json.dumps(a) )
-                except IOError as ioe:
-                    print "error writing json file"
-                    print ioe
-                else:
-                    f.close()
+                c = pymongo.Connection('localhost')
+                db = c.albums
+                albums = db.albums
+                albums.insert( json.loads(album) )
 
-                self.write( json.dumps({'msg': 'success'}) );
+                self.write( json.dumps({'msg': 'success'}) )
         else:
-            print self.current_user['email']
-            self.write( json.dumps({'msg': 'error'}) );
+            self.write( json.dumps({'msg': 'error'}) )
 
 class UploadHandler(BaseHandler):
     def post(self):
