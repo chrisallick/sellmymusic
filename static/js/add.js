@@ -68,7 +68,7 @@ crunchAlbumData = function( data ) {
 		var files = Array();
 		for( j = 0, len = fileInput.files['length']; j < len; j++ ) {
 			f = fileInput.files[j];
-			files.push(album['artist']+'.'+f.name);
+			files.push(album['catnum']+'.'+f.name);
 		}
 		album['artwork'] = files;
 	}

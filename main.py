@@ -123,6 +123,7 @@ class AddHandler(BaseHandler):
     def post(self):
         if self.current_user['email'] == "chrisallick@gmail.com":
             album = self.get_argument('album', None)
+            print album
             catnum = self.get_argument('remove', None)
             if album:
                 temp = json.loads(album)

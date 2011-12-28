@@ -1,0 +1,19 @@
+#albums { }
+
+.album { border-bottom: 1px solid black; padding: 20px 0px; }
+
+/* artwork */
+.album .album-artwork { width: 260px; margin-right: 20px; }
+.album .album-artwork .large { width: 250px; height: 200px; margin-bottom: 10px; border: 1px solid black; }
+.album .album-artwork .thumbs .thumb { padding: 1px;width: 50px; margin-right: 10px; cursor: pointer; border: 1px solid white; }
+.album .album-artwork .thumbs .selected { border: 1px solid black; }
+
+/* info */
+.album .album-info { width: 310px; margin-right: 20px; }
+.album .artist-description { width: 300px; padding: 5px 0px; }
+.album .album-description { width: 300px; border-top: 1px solid black; padding: 5px 0px; }
+
+/* tracks */
+.album .album-tracks { width: 180px; }
+.album .album-tracks .sides .side { margin-bottom: 10px; }
+.album .album-tracks ul { margin-left: 10px; }

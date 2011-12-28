@@ -6,6 +6,7 @@
 
 		<link rel="stylesheet" type="text/css" href="static/css/reset.css" />		
 		<link rel="stylesheet" type="text/css" href="static/css/main.css" />
+		<link rel="stylesheet" type="text/css" href="static/css/albums.css" />
 
 		<script type="text/javascript" src="static/js/jq.js"></script>
 		<script type="text/javascript" src="static/js/main.js"></script>
@@ -25,34 +26,43 @@
 			</div>
 
 			<div id="main">
-				{% for album in albums %}
-					<h2>Artwork:</h2>
-					{% for src in album['artwork'] %}
-						<img src="static/img/albums/{{ src }}" width="100" />
-					{% end %}
-					<h2>Artist: {{ album['artist'] }}</h2>
-					<h2>Album: {{ album['album'] }}</h2>
-					<h2>Label: {{ album['label'] }}</h2>
-					<h2>Artist description: {{ album['artist-description'] }}</h2>
-					<h2>Availability: {{ album['availability'] }}</h3>
-					<h2>Album description: {{ album['album-description'] }}</h2>
-					<h2>Price: {{ album['price'] }}</h2>
-					<h2>Tracks:</h2>
-					<div id="sides">
-						{% for side in album['tracks'] %}
-						<div>
-							<h3>Side: {{ side['name'] }}</h3>
-							<h3>Tracks:</h3>
-							<ul>
-								{% for track in side['tracks'] %}
-								<li>{{ track }}</li>
-								{% end %}
-							</ul>
+				<div id="albums">
+					{% for album in albums %}
+						<div class="album clear">
+							<div class="album-artwork left">
+								<img class="large" src="static/img/albums/{{ album['artwork'][0] }}" />
+								<div class="thumbs clear">
+									{% for src in album['artwork'] %}
+										<img class="thumb left" src="static/img/albums/{{ src }}" />
+									{% end %}
+								</div>
+								<a href="/edit/{{ album['catnum'] }}">edit</a>
+							</div>
+							<div class="album-info left">
+								<h2>{{ album['artist'] }} - {{ album['album'] }} ({{ album['label'] }})</h2>
+								<p class="artist-description">Artist description: {{ album['artist-description'] }}</p>
+								<p class="album-description">Album description: {{ album['album-description'] }}</p>
+								<h2>${{ album['price'] }} - {{ album['availability'] }}</h2>
+							</div>
+							<div class="album-tracks left">
+								<div class="sides">
+									{% for side in album['tracks'] %}
+									<div class="side">
+										<h3>Side: {{ side['name'] }}</h3>
+										<ul>
+											{% for track in side['tracks'] %}
+											<li>{{ track }}</li>
+											{% end %}
+										</ul>
+									</div>
+									{% end %}
+								</div>
+							</div>
 						</div>
-						{% end %}
-					</div>
-				{% end %}
+					{% end %}
+				</div>
 			</div>
+
 		</div>
 	</body>
 </html>
