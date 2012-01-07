@@ -9,11 +9,17 @@
 .album .album-artwork .thumbs .selected { border: 1px solid black; }
 
 /* info */
-.album .album-info { width: 310px; margin-right: 20px; }
-.album .artist-description { width: 300px; padding: 5px 0px; }
-.album .album-description { width: 300px; border-top: 1px solid black; padding: 5px 0px; }
+.album .album-info { width: 410px; margin-right: 20px; }
+.album .album-info .artist-name { font-size: 14px; font-weight: bold; }
+.album .album-info .album-name { font-size: 17px; font-weight: bold; }
+.album .album-info .label-name { font-size: 15px; font-weight: bold; }
+
+.album .artist-description { width: 400px; padding: 5px 0px; font-size: 14px; margin-top: 10px; }
+.album .album-description { width: 400px; border-top: 1px solid black; padding: 5px 0px; font-size: 14px; }
 
 /* tracks */
 .album .album-tracks { width: 180px; }
 .album .album-tracks .sides .side { margin-bottom: 10px; }
+.album .album-tracks .sides .side h3 { font-size: 15px; font-weight: bold; }
 .album .album-tracks ul { margin-left: 10px; }
+.album .album-tracks ul li { font-size: 14px; }

@@ -1,5 +1,13 @@
 #!/usr/bin/env python
 
+"""
+
+todo:
+    resize images upon upload.  scale way down for thumbnail
+    resize to fit gracefully in box.
+
+"""
+
 import json
 import os
 import logging
@@ -15,6 +23,8 @@ import tornado.options
 import tornado.web
 
 from tornado.options import define, options
+
+admins = ["chrisallick@gmail.com", "allick@gmail.com"]
 
 define("port", default=8888, help="run on the given port", type=int)
 
@@ -116,12 +126,14 @@ class EditHandler(BaseHandler):
 class AddHandler(BaseHandler):
     @tornado.web.authenticated
     def get(self):
-        if self.current_user['email'] == "chrisallick@gmail.com":
+        global admins
+        if self.current_user['email'] in admins:
             self.render("add.html")
 
     @tornado.web.authenticated
     def post(self):
-        if self.current_user['email'] == "chrisallick@gmail.com":
+        global admins
+        if self.current_user['email'] in admins:
             album = self.get_argument('album', None)
             print album
             catnum = self.get_argument('remove', None)

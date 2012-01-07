@@ -12,4 +12,9 @@ $(document).ready( function() {
 			}
 		});
 	});
+
+	$("#contact").click( function(event) {
+		console.log("contact!");
+		return false;
+	})
 })
