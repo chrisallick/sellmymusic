@@ -3,3 +3,4 @@ static/img/albums/.DS_Store
 img/.DS_Store
 *.png
 *.jpg
+.bundle\n
