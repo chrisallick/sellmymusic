@@ -1,38 +1,46 @@
-ENV['GOOGLE_AUTH_URL'] = '/openid'
+#smm-albumart
 
 require 'sinatra'
-require 'sinatra/partial'
-require 'sinatra/reloader' if development?
-require 'sinatra/google-auth'
-
+require 'sinatra/assetpack'
+require 'thin'
 require 'redis'
 
 $redis = Redis.new
-
 assets_version = 1
 
-admins = ["chrisallick@gmail.com", "allick@gmail.com"]
-
 
 ##########   /*     */   ##########
 
 
-# def on_user(info)
-# 	puts info.inspect
-# end
+class App < Sinatra::Base
+  set :root, File.dirname(__FILE__)
+  register Sinatra::AssetPack
 
-##########   /*     */   ##########
+  assets {
+    serve '/js',     from: 'app/public/js'        # Optional
+    serve '/css',    from: 'app/public/css'       # Optional
+    serve '/img', from: 'app/public/img'    # Optional
 
+    # The second parameter defines where the compressed version will be served.
+    # (Note: that parameter is optional, AssetPack will figure it out.)
+    js :app, '/js/jq.js', [
+      '/js/main.js',
+      ''
+    ]
 
-get '/' do
-	authenticate
-	'hello'
-  # albums = $redis.smembers( "albums" )
+    css :application, '/css/main.css', [
+      '/css/reset.css'
+    ]
 
-  # erb :home, :locals => {
-  #   :assets_version => assets_version,
-  #   :albums => albums
-  # }
+    js_compression  :jsmin      # Optional
+  }
+
+  get '/' do
+    erb :home
+  end
+
+  App.run!({ :port => 8889 })
+
 end
 
 

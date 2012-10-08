@@ -12,8 +12,6 @@ ssh_options[:keys] = "~/.ssh/#{key_pair}.pem"
 server "ec2-174-129-103-27.compute-1.amazonaws.com", :app, :primary => true
 
 
-
-
 # set :normalize_asset_timestamps, false
 
 
