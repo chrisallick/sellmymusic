@@ -1,0 +1,72 @@
+<div id="wrapper">
+
+	<div id="header">
+		<a class="line" href="/">home</a> / 
+		<a id="contact" class="line" href="#">contact</a> /
+		{% if current_user %}
+			<a class="line" href="/auth/logout">logout</a> /
+			<a href="/add">add</a>
+		{% else %}
+			<a class="line" href="/auth/login">login</a>
+		{% end %}
+	</div>
+
+	<div id="main">
+		<div id="albums">
+			{% for album in albums %}
+				<div class="album clear">
+					<div class="album-artwork left">
+						<img class="large" src="static/img/albums/{{ album['artwork'][0] }}" />
+						<div class="thumbs clear">
+							{% for src in album['artwork'] %}
+								<img class="thumb left" src="static/img/albums/{{ src }}" />
+							{% end %}
+						</div>
+						{% if current_user %}
+							<a href="/edit/{{ album['catnum'] }}">edit</a>
+						{% end %}
+						<h2>Availability: {{ album['availability'] }}</h2>
+						<a href="#">buy ${{ album['price'] }}</a>
+						<form target="paypal" action="https://www.paypal.com/cgi-bin/webscr" method="post">
+							<input type="hidden" name="cmd" value="_cart">
+							<input type="hidden" name="business" value="allick@gmail.com">
+							<input type="hidden" name="lc" value="US">
+							<input type="hidden" name="item_name" value="{{album['album']}}">
+							<input type="hidden" name="amount" value="{{ album['price'] }}">
+							<input type="hidden" name="currency_code" value="USD">
+							<input type="hidden" name="button_subtype" value="products">
+							<input type="hidden" name="no_note" value="0">
+							<input type="hidden" name="add" value="1">
+							<input type="hidden" name="bn" value="PP-ShopCartBF:btn_cart_LG.gif:NonHostedGuest">
+								<!-- <input type="image" src="https://www.paypalobjects.com/en_US/i/btn/btn_cart_LG.gif" border="0" 
+name="submit" alt="PayPal - The safer, easier way to pay online!">
+							<img alt="" border="0" src="https://www.paypalobjects.com/en_US/i/scr/pixel.gif" width="1" height="1"> -->
+						</form>
+					</div>
+					<div class="album-info left">
+						<div><span class="artist-name">{{ album['artist'] }}</span> - <span class="album-name">{{ album['album'] }}</div>
+						</span> (<span class="label-name">{{ album['label'] }})</span>
+
+						<p class="artist-description">Artist description: {{ album['artist-description'] }}</p>
+						<p class="album-description">Album description: {{ album['album-description'] }}</p>
+					</div>
+					<div class="album-tracks left">
+						<div class="sides">
+							{% for side in album['tracks'] %}
+							<div class="side">
+								<h3>Side: {{ side['name'] }}</h3>
+								<ul>
+									{% for track in side['tracks'] %}
+									<li>{{ track }}</li>
+									{% end %}
+								</ul>
+							</div>
+							{% end %}
+						</div>
+					</div>
+				</div>
+			{% end %}
+		</div>
+	</div>
+
+</div>
