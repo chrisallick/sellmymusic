@@ -21,7 +21,7 @@ postAlbumData = function( album ) {
 
 deleteAlbum = function( catnum ) {
 	$.ajax({
-		url: "/add",
+		url: "/delete",
 		type: 'POST',
 		data: { 'remove': catnum },
 		dataType: 'json',
@@ -88,7 +88,7 @@ submitFiles = function( catnum ) {
 			f = fileInput.files[j];
 			var xhr = new XMLHttpRequest();
 			xhr.onload = onloadHandler( f.name );
-			xhr.open('POST', '/upload', true );
+			xhr.open('POST', '/uploadfile', true );
 			xhr.setRequestHeader("X-File-Name", catnum+'.'+f.name);	
 			xhr.setRequestHeader("Content-Type", "application/octet-stream");
 			xhr.send( f );
