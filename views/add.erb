@@ -2,25 +2,20 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en-US" lang="en-US">
 	<head>
 		<meta http-equiv="content-type" content="text/html; charset=utf-8" />
-		<title>Add New Record</title>
+		<title>Records for Sale!</title>
 
-		<link rel="stylesheet" type="text/css" href="static/css/reset.css" />		
-		<link rel="stylesheet" type="text/css" href="static/css/main.css" />
-		<link rel="stylesheet" type="text/css" href="static/css/add.css" />
-
-		<script type="text/javascript" src="static/js/jq.js"></script>
-		<script type="text/javascript" src="static/js/add.js"></script>
+        <link href='/css/reset.css' media='all' rel='stylesheet' type='text/css' />
+		<link href='/css/main.css?av=<%= av %>' media='all' rel='stylesheet' type='text/css' />
+        <link href='/css/add.css?av=<%= av %>' media='all' rel='stylesheet' type='text/css' />
+        
+        <script src='/js/jq.js' type='text/javascript'></script>
+        <script src='/js/add.js?av=<%= av %>' type='text/javascript'></script>
 	</head>
 
 	<body>
 		<div id="wrapper">
 			<div id="header">
-				<a class="line" href="/">home</a> / 
-				{% if current_user %}
-					<a href="/auth/logout">logout</a>
-				{% else %}
-					<a class="line" href="/auth/login">login</a>
-				{% end %}
+				<a class="line" href="/">home</a>
 			</div>
 			<div id="add-album" class="clear">
 				<h1>Add New Album</h1>
