@@ -1,0 +1,10 @@
+html { height: 100%; }
+
+img { display: block; }
+body { font: normal 13px Helvetica; color: black; }
+a { text-decoration: none; color: black; }
+
+.left { float: left; }
+.right { float: right; }
+
+#wrapper { width: 1000px; margin: 0 auto; background: white; }

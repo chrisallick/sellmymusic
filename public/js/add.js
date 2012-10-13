@@ -5,16 +5,15 @@ postAlbumData = function( album ) {
 		data: { 'album': JSON.stringify(album) },
 		dataType: 'json',
 		beforeSend: function() {
-			$("#add-album").slideUp('fast');
-			$("#loading-gif").css("display", "inline");
+			$("#album-data").slideUp('fast');
+			$("#loading").show();
 		},
 		success: function(data) {
-			$("#loading-gif").css("display", "none");
-			console.log( data.msg );
-			submitFiles( album['catnum'] );
+			$("#loading").hide();
+			submitFiles();
 		},
 		error: function(data){
-			$("#loading-gif").css("display", "none");
+			$("#loading").hide();
 		}
 	});
 }
@@ -26,15 +25,14 @@ deleteAlbum = function( catnum ) {
 		data: { 'remove': catnum },
 		dataType: 'json',
 		beforeSend: function() {
-			$("#add-album").slideUp('fast');
-			$("#loading-gif").css("display", "inline");
+			$("#album-data").slideUp('fast');
+			$("#loading").show();
 		},
 		success: function(data) {
-			$("#loading-gif").css("display", "none");
-			console.log( data.msg );
+			$("#loading").hide();
 		},
 		error: function(data){
-			$("#loading-gif").css("display", "none");
+			$("#loading").hide();
 		}
 	});
 }
@@ -72,14 +70,13 @@ crunchAlbumData = function( data ) {
 		}
 		album['artwork'] = files;
 	}
-	//console.log( album );
 
 	if( !error ) {
 		postAlbumData( album );
 	}
 }
 
-submitFiles = function( catnum ) {
+submitFiles = function() {
 	var fileInput = document.getElementById('files');
 	if( fileInput.files['length'] == 0 ) {
 		alert("no files");
@@ -87,17 +84,29 @@ submitFiles = function( catnum ) {
 		for( j = 0, len = fileInput.files['length']; j < len; j++ ) {
 			f = fileInput.files[j];
 			var xhr = new XMLHttpRequest();
-			xhr.onload = onloadHandler( f.name );
-			xhr.open('POST', '/uploadfile', true );
-			xhr.setRequestHeader("X-File-Name", catnum+'.'+f.name);	
+            xhr.onreadystatechange = function() {
+                if (xhr.readyState == 4) {
+                    try { var resp = JSON.parse( xhr.responseText ); } catch(e) {}
+                    if( resp && resp["result"] == "success" ) {
+                        console.log( resp );
+                    }
+                }
+            };
+            onProgressHandler = function(event) {
+                var percent = event.loaded/event.total;
+                if( percent == 1 ) {}
+            };
+            onLoadStartHandler = function(event) {
+                console.log( "started!" );
+            };
+            xhr.upload.addEventListener("progress", onProgressHandler, false);
+            xhr.upload.addEventListener("onloadstart", onLoadStartHandler, false);
+			xhr.open('POST', '/addfile', true );
+			xhr.setRequestHeader("X-Filename", f.name);	
 			xhr.setRequestHeader("Content-Type", "application/octet-stream");
 			xhr.send( f );
 		}
 	}
-}
-
-onloadHandler = function( event, filename ) {
-	console.log( filename );
 }
 
 $(document).ready( function() {

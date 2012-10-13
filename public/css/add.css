@@ -1,4 +1,7 @@
-#add-album { margin: auto; width: 700px; padding-top: 10px; }
+#add-wrapper { margin: auto; width: 700px; padding-top: 10px; }
+
+#goadd { display: none; }
+#gocontact { display: none; }
 
 input { margin-left: 10px; margin-bottom: 10px; }
 input[type=text] { width: 300px; border: 1px solid black; }
@@ -21,4 +24,4 @@ h3 { font: bold 13px Helvetica; }
 
 #add-side, .add-track { font-weight: normal; }
 
-#loading-gif { display: none; }
+#loading { width: 207px; height: 207px; margin: 0 auto; display: none; }

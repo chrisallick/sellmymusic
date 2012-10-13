@@ -1,0 +1,5 @@
+#header { width: 700px; margin: auto; padding-top: 5px; text-align: right; }
+#header a:hover { text-decoration: underline; }
+
+#contactinfo { display: none; }
+.on { text-decoration: underline; }

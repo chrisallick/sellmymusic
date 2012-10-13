@@ -1,32 +1,16 @@
-<!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en-US" lang="en-US">
-	<head>
-		<meta http-equiv="content-type" content="text/html; charset=utf-8" />
-		<title>Manage Records</title>
+<div id="wrapper">
 
-		<link rel="stylesheet" type="text/css" href="static/css/reset.css" />		
-		<link rel="stylesheet" type="text/css" href="static/css/admin.css" />
+	<div id="header">
+		<a class="line" href="/">home</a> / 
+		{% if current_user %}
+			<a class="line" href="/auth/logout">logout</a>
+		{% else %}
+			<a class="line" href="/auth/login">login</a>
+		{% end %}
+	</div>
 
-		<script type="text/javascript" src="static/js/jq.js"></script>
-		<script type="text/javascript" src="static/js/admin.js"></script>
-	</head>
+	<div id="main">
 
-	<body>
-		<div id="wrapper">
+	</div>
 
-			<div id="header">
-				<a class="line" href="/">home</a> / 
-				{% if current_user %}
-					<a class="line" href="/auth/logout">logout</a>
-				{% else %}
-					<a class="line" href="/auth/login">login</a>
-				{% end %}
-			</div>
-
-			<div id="main">
-
-			</div>
-
-		</div>
-	</body>
-</html>
+</div>

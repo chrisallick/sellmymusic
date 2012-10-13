@@ -1,5 +1,6 @@
 require 'sinatra'
 require 'redis'
+require 'fileutils'
 
 $redis = Redis.new
 
@@ -13,8 +14,38 @@ get '/' do
     albums = $redis.smembers( "albums" )
     erb :home, :locals => {
         :av => assets_version,
-        :albums => albums
+        :albums => albums,
+        :page => "home"
     }
+end
+
+get '/add' do
+    erb :add, :locals => {
+        :av => assets_version,
+        :page => "add"
+    }
+end
+
+post '/add' do
+    puts params[:album]
+    return { :result => "success", :msg => "added album" }.to_json
+end
+
+post '/addfile' do
+    if request.env['HTTP_X_FILENAME']
+        extension = File.extname(request.env['HTTP_X_FILENAME']).downcase
+
+        if allowed_video_upload_formats.include? extension
+            uuid = UUIDTools::UUID.random_create.to_s
+
+            # s3_url = Helpers.s3_upload( request.env["rack.input"].read, extension, uuid )
+            s3_url = uuid
+
+            return { :result => "success", :msg => s3_url }.to_json
+        else
+            return { :result => "fail", :msg => "error uploading file" }.to_json
+        end
+    end
 end
 
 # ##########   /*     */   ##########
@@ -86,31 +117,6 @@ end
 #         else:
 #             self.redirect("/")
 
-
-get '/add' do
-    erb :add, :locals => {
-        :av => assets_version
-    }
-end
-
-post '/add' do
-    puts params[:album]
-end
-
 post '/delete' do
 
-end
-
-post '/uploadfile' do
-    extension = File.extname(request.env['HTTP_X_FILENAME']).downcase
-
-    if allowed_video_upload_formats.include? extension
-        uuid = UUIDTools::UUID.random_create.to_s
-
-        s3_url = Helpers.s3_upload( request.env["rack.input"].read, extension, uuid )
-
-        return { :result => "success", :msg => s3_url }.to_json
-    else
-        return { :result => "fail", :msg => "invalid file" }.to_json
-    end
 end
